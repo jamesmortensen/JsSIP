@@ -20,6 +20,7 @@ module.exports = function(grunt) {
     'src/Registrator.js',
     'src/RTCSession.js',
     'src/Message.js',
+    'src/OptionsPacket.js',
     'src/UA.js',
     'src/Utils.js',
     'src/SanityCheck.js',

@@ -56,7 +56,8 @@ UA = function(configuration) {
     'unregistered',
     'registrationFailed',
     'newRTCSession',
-    'newMessage'
+    'newMessage',
+    'newOptionsPacket'
   ];
 
   // Set Accepted Body Types
@@ -565,6 +566,11 @@ UA.prototype.receiveRequest = function(request) {
       'Allow: '+ JsSIP.Utils.getAllowedMethods(this),
       'Accept: '+ C.ACCEPTED_BODY_TYPES
     ]);
+    if (!this.checkEvent('newOptionsPacket') || this.listeners('newOptionsPacket').length === 0) {
+      return;
+    }
+    message = new JsSIP.OptionsPacket(this);
+    message.init_incoming(request);
   } else if (method === JsSIP.C.MESSAGE) {
     if (!this.checkEvent('newMessage') || this.listeners('newMessage').length === 0) {
       request.reply(405, null, ['Allow: '+ JsSIP.Utils.getAllowedMethods(this)]);
