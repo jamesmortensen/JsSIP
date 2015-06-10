@@ -1,0 +1,38 @@
+diff --git a/Gruntfile.js b/Gruntfile.js
+index 4d6b498..2ab8690 100644
+--- a/Gruntfile.js
++++ b/Gruntfile.js
+@@ -20,6 +20,7 @@ module.exports = function(grunt) {
+     'src/Registrator.js',
+     'src/RTCSession.js',
+     'src/Message.js',
++    'src/OptionsPacket.js',
+     'src/UA.js',
+     'src/Utils.js',
+     'src/SanityCheck.js',
+diff --git a/src/UA.js b/src/UA.js
+index b9d0753..5ad51fc 100644
+--- a/src/UA.js
++++ b/src/UA.js
+@@ -56,7 +56,8 @@ UA = function(configuration) {
+     'unregistered',
+     'registrationFailed',
+     'newRTCSession',
+-    'newMessage'
++    'newMessage',
++    'newOptionsPacket'
+   ];
+ 
+   // Set Accepted Body Types
+@@ -560,6 +561,11 @@ UA.prototype.receiveRequest = function(request) {
+       'Allow: '+ JsSIP.Utils.getAllowedMethods(this),
+       'Accept: '+ C.ACCEPTED_BODY_TYPES
+     ]);
++    if (!this.checkEvent('newOptionsPacket') || this.listeners('newOptionsPacket').length === 0) {console.warn("wth");
++      return;
++    }console.warn("we're here");//jameswashere
++    message = new JsSIP.OptionsPacket(this);
++    message.init_incoming(request);
+   } else if (method === JsSIP.C.MESSAGE) {
+     if (!this.checkEvent('newMessage') || this.listeners('newMessage').length === 0) {
+       request.reply(405, null, ['Allow: '+ JsSIP.Utils.getAllowedMethods(this)]);
